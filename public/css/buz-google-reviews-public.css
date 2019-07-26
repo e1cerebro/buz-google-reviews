@@ -1,0 +1,156 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+ 
+ .testimonial{
+    border-right: 4px solid #2A3D7D;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px 30px 30px 130px;
+    margin: 0 15px 30px 15px;
+    overflow: hidden;
+    position: relative;
+}
+.testimonial:before{
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: -17px;
+    border-top: 25px solid #e7711b;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    transform: rotate(45deg);
+}
+.testimonial:after{
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: -17px;
+    border-top: 25px solid #e7711b;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    transform: rotate(135deg);
+}
+.testimonial .pic{
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: absolute;
+    top: 60px;
+    left: 20px;
+}
+.testimonial .pic img{
+    width: 100%;
+    height: auto;
+}
+.testimonial .description{
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: #6f6f6f;
+    line-height: 25px;
+    margin-bottom: 15px;
+}
+.testimonial .title{
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #427fed;
+    margin: 0;
+}
+.testimonial .post{
+    display: inline-block;
+    font-size: 17px;
+    color: #a0a0a0;
+    font-style:italic;
+}
+.owl-theme .owl-controls .owl-page span{
+    border: 2px solid #2A3D7D;
+    background: #fff !important;
+  border-radius:0 !important;
+    opacity: 1;
+}
+.owl-theme .owl-controls .owl-page.active span,
+.owl-theme .owl-controls .owl-page:hover span{
+    background: #000000 !important;
+    border-color: #000000;
+}
+@media only screen and (max-width: 767px){
+    .testimonial{
+        padding: 20px;
+        text-align: center;
+    }
+    .testimonial .pic{
+        display: block;
+        position: static;
+        margin: 0 auto 15px;
+    }
+}
+
+
+.Stars {
+    --percent: calc(var(--rating) / 5 * 100%);
+    display: inline;
+    font-size: var(--star-size);
+    font-family: Times;
+    line-height: 1;
+  }
+  .Stars::before {
+    content: "★★★★★";
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .buz_review_header,.buz_footer_text{
+      text-align: center;
+  }
+
+  .buz_review_header {
+    margin: 25px 0;
+}
+
+span.Stars.buz-header-stars {
+    font-size: 35px;
+}
+
+span.buz-company-name {
+    font-weight: 900;
+}
+
+.buz_rating_text {
+    font-size: 29px;
+    margin-bottom: 0;
+}
+
+.buz-see-all{
+    color: #ffffff;
+    font-weight: 400;
+    font-size: 20px;
+    background-color: #e7711b;
+    padding: 11px 31px;
+    margin-bottom: 10px;
+    display: inline-block;
+    border-radius: 100px;
+    transition: all 0.4s;
+    box-shadow: 1px 4px 5px 1px #6b6b6b;
+}
+
+.buz-see-all:hover{
+    box-shadow: 0px 7px 5px 1px #6b6b6b;
+    color: #fff;}
+
+.buz_header_star{
+    font-size: 27px;
+}
+
+  :root {
+  --star-size: 1.5rem;
+  --star-color: #d4cece;
+  --star-background: #e7711b;
+  }

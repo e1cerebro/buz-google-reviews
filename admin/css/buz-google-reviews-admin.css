@@ -1,0 +1,12 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+ .buz-loading-gif{
+    text-align: center;
+  }
+
+  .hide-element{
+      display: none;
+  }
