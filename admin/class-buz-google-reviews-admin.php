@@ -110,7 +110,7 @@ class Buz_Google_Reviews_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/buz-google-reviews-admin.js', array( 'jquery' ), time(), false );
 		wp_enqueue_script( $this->plugin_name.'-semantic-ui-js', 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.js');
-
+		
 		wp_localize_script($this->plugin_name, 
 							'buz_vars',
 								[
@@ -136,13 +136,13 @@ class Buz_Google_Reviews_Admin {
 
 
 	public function buz_settings_options(){
+		
 		add_settings_section(
 			'buz_general_section',
 			__( 'General Settings', $this->plugin_name ),
 			[$this, 'buz_general_settings_section_cb' ],
 			$this->plugin_name
 		);
-
 
 		/* Google Api */
 		add_settings_field(
@@ -164,7 +164,7 @@ class Buz_Google_Reviews_Admin {
 			'buz_general_section'
  		);
 
-		register_setting( $this->plugin_name, 'buz_company_name_el');
+		register_setting( $this->plugin_name, 'buz_company_name_el', [$this, 'buz_company_name_sanitize_input']);
 		
 		
 		/* Google Api */
@@ -216,6 +216,8 @@ class Buz_Google_Reviews_Admin {
 
 	}
 
+	
+
 	/* Display the input controls foe the google API settings */
 	public function buz_google_api_cb(){
 		$buz_google_api =  get_option('buz_google_api_el'); 
@@ -265,6 +267,7 @@ class Buz_Google_Reviews_Admin {
 		<?php
 	}
 
+
 	/* Display the input controls foe the google API settings */
 	public function buz_toggle_see_all_cb(){
 
@@ -289,16 +292,28 @@ class Buz_Google_Reviews_Admin {
 	}
 
 
+	
+	public function buz_company_name_sanitize_input($input){
+		$old_comp_name = get_option('buz_company_name_el');
+
+		if($old_comp_name != $input){
+			$this->buz_truncate_db_fc();
+		} 
+
+		return trim($input);
+}
+
+
 	public function buz_fetch_reviews(){
 
 		$file = plugin_dir_path( __FILE__ ).'partials/templates/buz_review_rows.php';
         require_once plugin_dir_path( __FILE__ ) . '../includes/process/buz-functions.php';
 
 		//Get DB Review Data
-		$last_db_review =  $this->buz_get_last_bd_review();
-		$buz_db_review     = $this->buz_get_bd_review();
-
+		$last_db_review    =  $this->buz_get_last_bd_review();
+		$buz_db_review     =  buz_get_db_reviews();
 		$output = [];
+
 		$row_output = '';
 
 		$output['query_mode'] = $_POST['query_mode'];
@@ -318,7 +333,8 @@ class Buz_Google_Reviews_Admin {
 						$response_template = str_replace(ROW_ID, $review->ID , $response_template);
 						$response_template = str_replace(PHOTO_URL, $review->profile_photo_url , $response_template);
 						$response_template = str_replace(REVIEW_TEXT, $review->text , $response_template);
-						$response_template = str_replace(RATING, $review->rating , $response_template);
+						$rating			= sprintf("%.1f", $review->rating);
+						$response_template = str_replace(RATING, $rating , $response_template);
 						$response_template = str_replace(DATE_DSC, $review->relative_time , $response_template);
 
 						$checked 		   = 'show' == buz_get_review_status($review->author_id) ? 'checked' : '';
@@ -332,6 +348,8 @@ class Buz_Google_Reviews_Admin {
 		
 						$row_output.= $response_template;
 					}
+
+					set_buz_transient_data();
 			}else{
 				$output['API_ERROR'] = 'Db is empty';
 			}
@@ -345,7 +363,6 @@ class Buz_Google_Reviews_Admin {
 			$referenceObj = file_get_contents('https://maps.googleapis.com/maps/api/place/textsearch/json?query='.$companyName.'&sensor=true&key='.$buz_google_api);
 			$data = json_decode($referenceObj);
 
-			$output['Datatatata'] =$data ;
 			$referenceID   = $data->results[0]->reference;
 
 			update_option('buz_reference_id', $referenceID);
@@ -353,9 +370,7 @@ class Buz_Google_Reviews_Admin {
 			$reviewsJson  = file_get_contents('https://maps.googleapis.com/maps/api/place/details/json?reference='.$referenceID.'&key='.$buz_google_api);
 			$reviewsOBJ   	= json_decode($reviewsJson);
 
-			
-
-			$results = [];
+		
 			$companyAddress = $reviewsOBJ->result->formatted_address;
 			$companyName	= $reviewsOBJ->result->name;
 			$companyPhone	= $reviewsOBJ->result->international_phone_number;
@@ -364,8 +379,8 @@ class Buz_Google_Reviews_Admin {
 			$queryStatus	= $reviewsOBJ->result->queryStatus;
 
 			update_option('buz_company_rating', $companyRating);
-
-
+			
+		/* 	$results = [];
 			$results        = [
 					'companyAddress' => $companyAddress,
 					'companyName'    => $companyName,
@@ -373,146 +388,150 @@ class Buz_Google_Reviews_Admin {
 					'companyRating'  => $companyRating,
 					'companyReviews' => $companyReviews,
 					'queryStatus'    => $queryStatus
-			];
- 
+			]; */
+			//GEt the last row of the company review gotten from the API
 			$google_api_review = $companyReviews[4]->text;
-		
 			
+			//If data was retrieved from the API request
+		  if(sizeof($google_api_review) > 0){
+				$buz_db_review = [];
+				$last_db_review = [];
+				$this->buz_truncate_db_fc();
+ 		  }  
 
 		//Reviews is in DB and last DB review === API last review = Get reviews from DB and don't insert new one
 		if(sizeof($buz_db_review) > 0 && strlen($reviewsOBJ->error_message) <= 0 && $last_db_review == $google_api_review ){
 			
-			$output['updated_review_from_api']   = 'ignore';
-			$output['status'] = 'DB Exists and equal to API => Fetch from BD';
+			//$output['status'] = 'DB Exists and equal to API => Fetch from BD';
 
 			foreach( $buz_db_review as  $review){
+				//Get the file template
 				$response_template = file_get_contents($file, true);
 
+				//Check if the reviews is allowed to be shown on the fron page
+				$checked 		   = 'show' == buz_get_review_status($review->author_id) ? 'checked' : '';
+
+				//Build the checkbox
+				$toggle_status =  '<div class="ui checkbox toggle">';
+				$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
+				$toggle_status .= '</div>';
+
+				//replace the constant placeholders with the values
 				$response_template = str_replace(NAME, $review->author_name , $response_template);
 				$response_template = str_replace(ROW_ID, $review->ID , $response_template);
 				$response_template = str_replace(PHOTO_URL, $review->profile_photo_url , $response_template);
 				$response_template = str_replace(REVIEW_TEXT, $review->text , $response_template);
 				$response_template = str_replace(RATING, $review->rating , $response_template);
 				$response_template = str_replace(DATE_DSC, $review->relative_time , $response_template);
-
-				$checked 		   = 'show' == buz_get_review_status($review->author_id) ? 'checked' : '';
-
-				$toggle_status =  '<div class="ui checkbox toggle">';
-				$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
-				$toggle_status .= '</div>';
-
 				$response_template = str_replace(TOGGLE_STATUS, $toggle_status , $response_template);
 
-	
+				//conc the final output
 				$row_output.= $response_template;
 			}
+
+			//Set the transient caching
+			set_buz_transient_data();
+
 
 		//Reviews is in DB and last DB review != API last review = Get reviews from DB and don't insert new one
 		}elseif(sizeof($buz_db_review) > 0 && strlen($reviewsOBJ->error_message) <= 0 && $last_db_review != $google_api_review ){
 
 				$output['updated_review_from_api']   = 'New Reviews Found';
 				$output['status'] = 'DB Exists But Not equal to API => Insert new Data';
+				
+				$this->buz_truncate_db_fc();
 
 				foreach($companyReviews as  $review){
 
+					//Get the file templates
 					$response_template = file_get_contents($file, true);
 
-					$user_data = $this->buz_get_author_name($review->author_name);
-
-					if($user_data->author_name == $review->author_name && trim($user_data->text) == trim($review->text)){
-						$output['dt'] = 'found';
-						$insert_id = $user_data->ID;
-					}else{
-						$insert_id = $this->buz_insert_data($review);
-					}
+					//Insert data into the database
+					$insert_id = $this->buz_insert_data($review);
 
 					$path_array			= explode('/', $review->author_url);
-					$output['authorId'] = $path_array[5];
+	 
+					/* Configure the checkboxes */
+					$checked 		   = 'checked';
+
+					$toggle_status =  '<div class="ui checkbox toggle">';
+					$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
+					$toggle_status .= '</div>';
 		
-		
+					/* Replace the Placeholders */
 					$response_template = str_replace(NAME, $review->author_name , $response_template);
 					$response_template = str_replace(ROW_ID, $insert_id , $response_template);
 					$response_template = str_replace(PHOTO_URL, $review->profile_photo_url , $response_template);
 					$response_template = str_replace(REVIEW_TEXT, $review->text , $response_template);
 					$response_template = str_replace(RATING, $review->rating , $response_template);
 					$response_template = str_replace(DATE_DSC, $review->relative_time_description , $response_template);
-
-					$checked 		   = 'show' == buz_get_review_status($user_data->author_id) ? 'checked' : '';
-
-					$toggle_status =  '<div class="ui checkbox toggle">';
-					$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
-					$toggle_status .= '</div>';
-
 					$response_template = str_replace(TOGGLE_STATUS, $toggle_status , $response_template);
 
 					$row_output.= $response_template;
 				}
 
+				//Set the transient caching
+				set_buz_transient_data();
+
 				
-			}elseif(sizeof($buz_db_review) <= 0 && strlen($reviewsOBJ->error_message) <= 0 && $last_db_review != $google_api_review ){
+			}elseif( sizeof($buz_db_review) <= 0 && strlen($reviewsOBJ->error_message) <= 0 && $last_db_review != $google_api_review ){
 
-			$output['updated_review_from_api']   = 'New Reviews Found';
-			$output['status'] = 'DB Not Exists And Not equal to API => Insert new Data';
+					$output['updated_review_from_api']   = 'New Reviews Found';
+					$output['status'] = 'DB Not Exists And Not equal to API => Insert new Data';
 
 
-			foreach($companyReviews as  $review){
+					foreach($companyReviews as  $review){
+						//Get the file contents for the template
+						$response_template = file_get_contents($file, true);
 
-				$response_template = file_get_contents($file, true);
+						//Insert data into the database
+						$insert_id = $this->buz_insert_data($review);
 
-				$user_data = $this->buz_get_author_name($review->author_name);
+						//get the author ID
+						$path_array			= explode('/', $review->author_url);
 
-			/* 	$output['r'] = 	$this->buz_get_author_id($review->author_url) ;
-				wp_send_json($output); */
+						$checked 		   =  'checked';
 
-				if($user_data->author_name == $review->author_name && trim($user_data->text) == trim($review->text)){
-					$output['dt'] = 'found';
-					$insert_id = $user_data->ID;
-				}else{
-					$insert_id = $this->buz_insert_data($review);
-				}
+						$toggle_status  =  '<div class="ui checkbox toggle">';
+						$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
+						$toggle_status .= '</div>';
 
-				$path_array			= explode('/', $review->author_url);
-				$output['authorId'] = $path_array[5];
+						//Replace the placeholders
+						$response_template = str_replace(NAME, $review->author_name , $response_template);
+						$response_template = str_replace(ROW_ID,  $insert_id , $response_template);
+						$response_template = str_replace(PHOTO_URL, $review->profile_photo_url , $response_template);
+						$response_template = str_replace(REVIEW_TEXT, $review->text , $response_template);
+						$response_template = str_replace(RATING, $review->rating , $response_template);
+						$response_template = str_replace(DATE_DSC, $review->relative_time_description , $response_template);
+						$response_template = str_replace(TOGGLE_STATUS, $toggle_status , $response_template);
 
-				$response_template = str_replace(NAME, $review->author_name , $response_template);
-				$response_template = str_replace(ROW_ID,  $insert_id , $response_template);
-				$response_template = str_replace(PHOTO_URL, $review->profile_photo_url , $response_template);
-				$response_template = str_replace(REVIEW_TEXT, $review->text , $response_template);
-				$response_template = str_replace(RATING, $review->rating , $response_template);
-				$response_template = str_replace(DATE_DSC, $review->relative_time_description , $response_template);
+						$row_output.= $response_template;
+					}
 
-				$checked 		   = 'show' == buz_get_review_status($user_data->author_id) ? 'checked' : '';
+					//Set the transient caching
+					set_buz_transient_data();
 
-				$toggle_status =  '<div class="ui checkbox toggle">';
-				$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
-				$toggle_status .= '</div>';
-
-				$response_template = str_replace(TOGGLE_STATUS, $toggle_status , $response_template);
-
-				$row_output.= $response_template;
-			}
-
-			
 			}elseif(sizeof($buz_db_review) <= 0 &&  $last_db_review != $google_api_review && strlen($reviewsOBJ->error_message) >=1){
-				$output['status'] = 'Data Doesnt exits';
-				$output['updated_review_from_api']   = 'Error';
-				$row_output.= $reviewsOBJ->error_message;
-
-				
+				$output['status'] 	 = 'DB Data Doesn\'t exits';
+				$output['API_ERROR'] = $reviewsOBJ->error_message;
 			}else{
 				$output['API_ERROR'] = $reviewsOBJ->error_message;
-				$row_output.= $reviewsOBJ->error_message;
 			}
-
 		}
 
-		$output['review_row']   = $row_output;
-		$output['last_review']  = $this->buz_get_bd_review();
-		$output['reviews'] 		= $companyReviews;
+		$output['review_row']  			= $row_output;
+		$output['last_review']  		= $this->buz_get_bd_review();
+		$output['reviews'] 				= $companyReviews;
 
-		$output['author']       = $this->buz_get_author_name('Margaret Newey');
+		
+		$reviews = buz_get_db_reviews();
 
-		wp_send_json($output , $status_code = 200 );
+       // $output['trans_sst'] =       set_transient( 'buz_reviews_trans', $reviews , 604800 );
+	  // delete_transient('buz_reviews_trans');
+		$output['transient_reviews'] 	= get_transient( 'buz_reviews_trans');
+
+		wp_send_json($output);
+
 	}
 
 
@@ -549,7 +568,6 @@ class Buz_Google_Reviews_Admin {
 		$table 		 = $wpdb->prefix.'buz_google_reviews';
 		$query 		 = "SELECT * FROM $table ORDER BY ID DESC LIMIT 1";
 		$last_review = $wpdb->get_results($query);
-		//return $wpdb->last_query;
 		return $last_review[0]->text;
 
 	}
@@ -602,4 +620,12 @@ class Buz_Google_Reviews_Admin {
 
 		wp_send_json($delete);
 	}
+
+	public function buz_truncate_db_fc(){
+		global $wpdb;
+		$table 		 = $wpdb->prefix.'buz_google_reviews';
+
+		$delete = $wpdb->query("TRUNCATE TABLE $table");
+	}
+
 }

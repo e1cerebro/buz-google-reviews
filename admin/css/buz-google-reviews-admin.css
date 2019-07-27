@@ -10,3 +10,24 @@
   .hide-element{
       display: none;
   }
+
+  .Stars {
+    --percent: calc(var(--rating) / 5 * 100%);
+    display: inline;
+    font-size: var(--star-size);
+    font-family: Times;
+    line-height: 1;
+  }
+  .Stars::before {
+    content: "★★★★★";
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+:root {
+--star-size: 1.5rem;
+--star-color: #d4cece;
+--star-background: #e7711b;
+}

@@ -102,10 +102,16 @@ class Buz_Google_Reviews_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/buz-google-reviews-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/buz-google-reviews-public.js', array( 'jquery' ),time(), false );
 		wp_enqueue_script( $this->plugin_name.'-car-js', "https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js", array( 'jquery' ), '', false );
 		wp_enqueue_script( $this->plugin_name.'-more-js', "https://cdnjs.cloudflare.com/ajax/libs/Readmore.js/2.2.0/readmore.min.js", array( 'jquery' ), '', false );
- 
+		
+		wp_localize_script($this->plugin_name, 
+		'buz_vars',
+			[
+				'ajax_url' => admin_url('admin-ajax.php')
+			]
+		);
  
 	}
 
@@ -159,6 +165,38 @@ class Buz_Google_Reviews_Public {
 			//$status = $wpdb->insert($table,$data,$format);
 
 			//die($status);
+
+	}
+
+
+	public function buz_get_reviews(){
+		
+    	require_once plugin_dir_path( __FILE__ ) . '../includes/process/buz-functions.php';
+		$file = plugin_dir_path( __FILE__ ).'templates/buz-reviews.php';
+		global $wpdb;
+		$table 		 = $wpdb->prefix.'buz_google_reviews';
+		$query 		 = "SELECT * FROM $table ORDER BY ID DESC";
+        
+		$reviews = $wpdb->get_results($query);
+		$row = '';
+		foreach( $reviews as  $review){
+			$response_template = file_get_contents($file, true);
+
+			$response_template = str_replace(PROFILE_PICS_URL, $review->profile_photo_url , $response_template);
+			$response_template = str_replace(REVIEW_RATING, sprintf("%.1f", $review->rating) , $response_template);
+			$review_text = trim($review->text);
+			$response_template = str_replace(REVIEW_TEXT, $review_text , $response_template);
+			$response_template = str_replace(AUTHOR_NAME, $review->author_name , $response_template);
+			$response_template = str_replace(REVIEW_TIME, ucfirst($review->relative_time)  , $response_template);
+
+
+			$row .= $response_template;
+		}
+		
+
+		wp_send_json($row);
+
+
 
 	}
 

@@ -42,20 +42,29 @@ function getReviews(this_el, query_mode){
 			data:   ajax_args,
 			success: function(response) {
 
-				console.log(response);
+				console.log("Response", response);
 				if('ignore' != response.updated_review_from_api){
 					
 					console.log('New Review Was Found');
 				}else{
 					console.log('No New Review Was Found');
 				}
-				$('#buz_reviews_tb').fadeIn();
-				$('#buz_table_body').html('');
-				$('#buz_table_body').append(response.review_row);
-				
-				$('.buz-loading-gif').addClass('hide-element');
-				$('#buz_reviews_tb').slideDown();
-				
+
+
+				if(response.API_ERROR == 'Db is empty'){
+					$('.buz_message').slideToggle();
+					$('#buz_reviews_tb').slideUp();
+					$('.buz-loading-gif').addClass('hide-element');
+
+				}else{
+					$('#buz_reviews_tb').fadeIn();
+					$('#buz_table_body').html('');
+					$('#buz_table_body').append(response.review_row);
+					
+					$('.buz-loading-gif').addClass('hide-element');
+					$('#buz_reviews_tb').slideDown();
+
+				}
 				enableSelect(this_el)
 
 			}
@@ -101,6 +110,7 @@ jQuery(document).ready(function($) {
 	$('#fetch-reviews').on('click', function() {
 		
 		 disableSelect(this_el);
+		 $('.buz_message').hide();
 		 $('#buz_reviews_tb').hide();
 		 getReviews(this_el, 'fetch_new');
 	 });
@@ -160,7 +170,8 @@ jQuery(document).ready(function($) {
 					enableSelect(this_el)
 					if(true == response){
 						$('#buz_reviews_tb').fadeOut();
-					}
+						$('.buz_message').show();
+ 					}
 				}
 			});
 	});

@@ -74,12 +74,7 @@ if(isset($_GET["tab"]))
 
                     ?>
                 <br/>
-                <input type="button" name="fetch-reviews" id="fetch-reviews" class="button button-primary" value="Fetch Reviews"> &nbsp;
-                <input type="button" name="delete-all-reviews" id="delete_all_reviews" class="button button-secondary" value="Delete All Reviews">
-                
-               
-               
-               <hr>
+
                 <div class="buz-loading-gif">
                     <img width="250" height="auto" src="<?php echo LOADING_IMAGE_PATH; ?>" alt="Loading Review">
                 </div>
@@ -100,6 +95,16 @@ if(isset($_GET["tab"]))
                     </tbody>
                 
                 </table>
+                <hr/>
+                <input type="button" name="fetch-reviews" id="fetch-reviews" class="button button-primary" value="Fetch Reviews"> &nbsp;
+                <input type="button" name="delete-all-reviews" id="delete_all_reviews" class="button button-secondary right" value="Delete All Reviews">
+                
+                <div class="ui warning message buz_message hide-element">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        No reviews were found!
+                    </div>
+                 </div>
                <?php
 
                 

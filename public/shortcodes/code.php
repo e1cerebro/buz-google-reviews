@@ -2,20 +2,28 @@
 
     add_shortcode('g_reviews', 'buz_show_reviews');
 
-    function buz_show_reviews(){
+    function buz_show_reviews($attr){
+        extract(shortcode_atts(array(
+             'cols'            => '-1',
+             ), $attr));
 
-        global $wpdb;
-		$table 		 = $wpdb->prefix.'buz_google_reviews';
-		$query 		 = "SELECT * FROM $table ORDER BY ID DESC";
-        
-        $reviews = $wpdb->get_results($query);
+        if(sizeof(get_transient('buz_reviews_trans') <= 1)){
+            global $wpdb;
+            $table 		 = $wpdb->prefix.'buz_google_reviews';
+            $query 		 = "SELECT * FROM $table ORDER BY ID DESC";
+            
+            $reviews = $wpdb->get_results($query);
+        }else{
+            $reviews = get_transient( 'buz_reviews_trans');
+        }
 
         require_once plugin_dir_path( __FILE__ ) . '../../includes/process/buz-functions.php';
 
 
   ?>
-  
-                <div class="buz_review_header">
+  <div class="buz-reviews-public">
+          <div class="buz_review_header" id="buz_review_header"
+                data-cols = <?php echo $cols; ?>>
                 <?php if(1 == get_option('buz_google_logo_el')): ?>
                     <img width="205" src="<?php  echo GOOGLE_IMAGE_PATH; ?>" alt="Powered by Google">
                 <?php endif; ?>
@@ -27,7 +35,7 @@
                 <?php endif; ?>    
             </div>
 
-              <div id="testimonial-slider" class="owl-carousel">
+              <div class="testimonial-slider" class="owl-carousel">
 
                 <?php foreach( $reviews as  $review): ?>
                     <?php if('show' == buz_get_review_status($review->author_id)): ?>
@@ -57,7 +65,7 @@
                         <a class="buz-see-all" target="_blank" href="https://search.google.com/local/reviews?placeid=<?php echo get_option('buz_reference_id'); ?>"> See All Reviews</a>
                     <?php endif; ?>
                 </div>
-     
+    </div>
   <?php
        
     }
