@@ -258,7 +258,7 @@ class Buz_Google_Reviews_Admin {
 
 		$buz_show_min_review =  get_option('buz_show_min_review_el'); 
 		?>
-		<select class="ui dropdown" name="" >
+		<select class="ui dropdown" name="buz_show_min_review_el" >
 			<option value="1" <?php echo '1' == $buz_show_min_review ? 'SELECTED' : ''; ?>>1</option>
 			<option value="2" <?php echo '2' == $buz_show_min_review ? 'SELECTED' : ''; ?>>2</option>
 			<option value="2" <?php echo '3' == $buz_show_min_review ? 'SELECTED' : ''; ?>>3</option>
@@ -377,8 +377,9 @@ class Buz_Google_Reviews_Admin {
 					}
 
 					set_buz_transient_data();
+					$output['API_ERROR'] = '';
 			}else{
-				$output['API_ERROR'] = 'Db is empty';
+				$output['API_ERROR'] = 'No reviews were found';
 			}
 		}
 		//Fetch Query Clicked
@@ -397,6 +398,7 @@ class Buz_Google_Reviews_Admin {
 			$reviewsJson  = file_get_contents('https://maps.googleapis.com/maps/api/place/details/json?reference='.$referenceID.'&key='.$buz_google_api);
 			$reviewsOBJ   	= json_decode($reviewsJson);
 
+			$output['json_api'] = $reviewsOBJ;
 		
 			$companyAddress = $reviewsOBJ->result->formatted_address;
 			$companyName	= $reviewsOBJ->result->name;
@@ -458,7 +460,7 @@ class Buz_Google_Reviews_Admin {
 
 			//Set the transient caching
 			set_buz_transient_data();
-
+			$output['API_ERROR'] = '';
 
 		//Reviews is in DB and last DB review != API last review = Get reviews from DB and don't insert new one
 		}elseif(sizeof($buz_db_review) > 0 && strlen($reviewsOBJ->error_message) <= 0 && $last_db_review != $google_api_review ){
@@ -499,7 +501,7 @@ class Buz_Google_Reviews_Admin {
 
 				//Set the transient caching
 				set_buz_transient_data();
-
+				$output['API_ERROR'] = '';
 				
 			}elseif( sizeof($buz_db_review) <= 0 && strlen($reviewsOBJ->error_message) <= 0 && $last_db_review != $google_api_review ){
 
@@ -537,13 +539,14 @@ class Buz_Google_Reviews_Admin {
 
 					//Set the transient caching
 					set_buz_transient_data();
+					$output['API_ERROR'] = '';
 
 			}elseif(sizeof($buz_db_review) <= 0 &&  $last_db_review != $google_api_review && strlen($reviewsOBJ->error_message) >=1){
 				$output['status'] 	 = 'DB Data Doesn\'t exits';
 				$output['API_ERROR'] = $reviewsOBJ->error_message;
 			}else{
 				$output['API_ERROR'] = $reviewsOBJ->error_message;
-			}
+ 			}
 		}
 
 		$output['review_row']  			= $row_output;

@@ -51,10 +51,12 @@ function getReviews(this_el, query_mode){
 				}
 
 
-				if(response.API_ERROR == 'Db is empty'){
+				if(response.API_ERROR.length > 0){
 					$('.buz_message').slideToggle();
 					$('#buz_reviews_tb').slideUp();
 					$('.buz-loading-gif').addClass('hide-element');
+					$('.buz_error_message').html('');
+					$('.buz_error_message').append(response.API_ERROR);
 
 				}else{
 					$('#buz_reviews_tb').fadeIn();
@@ -171,6 +173,9 @@ jQuery(document).ready(function($) {
 					if(true == response){
 						$('#buz_reviews_tb').fadeOut();
 						$('.buz_message').show();
+						$('.buz_error_message').html('');
+						$('.buz_error_message').append("No reviews were found");
+
  					}
 				}
 			});

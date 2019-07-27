@@ -102,7 +102,7 @@ if(isset($_GET["tab"]))
                 <div class="ui warning message buz_message hide-element">
                     <i class="close icon"></i>
                     <div class="header">
-                        No reviews were found!
+                        <p class="buz_error_message"></p>
                     </div>
                  </div>
                <?php

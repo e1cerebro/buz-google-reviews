@@ -38,7 +38,7 @@
               <div class="testimonial-slider" class="owl-carousel">
 
                 <?php foreach( $reviews as  $review): ?>
-                    <?php if('show' == buz_get_review_status($review->author_id)): ?>
+                    <?php if('show' == buz_get_review_status($review->author_id) && $review->rating >= get_option('buz_show_min_review_el') ): ?>
                     <div class="testimonial">
                         <div class="pic">
                             <img src="<?php echo $review->profile_photo_url; ?>">

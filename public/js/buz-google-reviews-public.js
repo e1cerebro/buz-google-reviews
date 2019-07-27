@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
 		collapsedHeight: 100,
 		moreLink: '<a href="#">Read more &gt;</a>',
 		lessLink: '<a href="#">Read less</a>',
-		heightMargin: 10
+		heightMargin: 16
 	});
 
 	//$('.buz-reviews-public').delay(2000).fadeIn(1000);
