@@ -49,6 +49,30 @@ class Buz_Google_Reviews_Activator {
 		require(ABSPATH.'/wp-admin/includes/upgrade.php');
 
 		dbDelta($createSQL);
+
+		//set up the settings options
+		if(strlen(get_option('buz_show_min_review_el')) <= 0){
+			update_option('buz_show_min_review_el', 3);
+		}
+		
+		if(strlen(get_option('buz_google_logo_el')) <= 0){
+			update_option('buz_google_logo_el', 1);
+		}
+
+		if(strlen(get_option('buz_company_review_star_el')) <= 0){
+			update_option('buz_company_review_star_el', 1);
+		}
+		
+
+		if(strlen(get_option('buz_toggle_company_name_el')) <= 0){
+			update_option('buz_toggle_company_name_el', 1);
+		}
+		
+
+		if(strlen(get_option('buz_toggle_see_all_el')) <= 0){
+			update_option('buz_toggle_see_all_el', 1);
+		}
+		
 	
 
 	}

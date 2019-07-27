@@ -32,3 +32,19 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 global $wpdb;
 $wpdb->query("DROP TABLE IF EXISTS `".$wpdb->prefix."buz_google_reviews` ");
+
+
+	//Delete options
+ 	delete_option('buz_show_min_review_el');
+ 
+ 	delete_option('buz_google_logo_el');
+
+ 	delete_option('buz_company_review_star_el');
+ 
+ 	delete_option('buz_toggle_company_name_el');
+ 
+ 	delete_option('buz_toggle_see_all_el');
+ 
+ 	delete_option('buz_google_api_el');
+ 
+ 	delete_option('buz_company_name_el');

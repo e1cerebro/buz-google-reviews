@@ -208,7 +208,18 @@ class Buz_Google_Reviews_Admin {
  		);
 
 		register_setting( $this->plugin_name, 'buz_toggle_see_all_el');
-		
+
+
+		add_settings_field(
+			'buz_show_min_review_el',
+			__( 'Show Min Rating', $this->plugin_name ),
+			[ $this,'buz_show_min_review_cb'],
+			$this->plugin_name,
+			'buz_general_section'
+ 		);
+
+		register_setting( $this->plugin_name, 'buz_show_min_review_el');
+
 	}
 
 
@@ -239,6 +250,22 @@ class Buz_Google_Reviews_Admin {
 			<input type="checkbox" id="buz_google_logo_el" name="buz_google_logo_el" value = "1" <?php echo 1 == $buz_google_logo ? 'checked' : ''; ?> >
 			<label for="buz_google_logo_el">Toggle to Show or Hide option</label>
 		</div>
+		<?php
+	}
+
+	/* Display the input controls foe the google API settings */
+	public function buz_show_min_review_cb(){
+
+		$buz_show_min_review =  get_option('buz_show_min_review_el'); 
+		?>
+		<select class="ui dropdown" name="" >
+			<option value="1" <?php echo '1' == $buz_show_min_review ? 'SELECTED' : ''; ?>>1</option>
+			<option value="2" <?php echo '2' == $buz_show_min_review ? 'SELECTED' : ''; ?>>2</option>
+			<option value="2" <?php echo '3' == $buz_show_min_review ? 'SELECTED' : ''; ?>>3</option>
+			<option value="2" <?php echo '4' == $buz_show_min_review ? 'SELECTED' : ''; ?>>4</option>
+			<option value="2" <?php echo '5' == $buz_show_min_review ? 'SELECTED' : ''; ?>>5</option>
+		</select>
+		<p class="description"><?php _e('Minimum rating to display to the visitors', $this->plugin_name) ?></p>
 		<?php
 	}
 
@@ -284,7 +311,7 @@ class Buz_Google_Reviews_Admin {
 		$buz_company_name =  get_option('buz_company_name_el'); 
 		?>
 		<div class="ui input">
-		 	<input class="regular-text" type="text" name="<?php echo 'buz_company_name_el'; ?>" value="<?php echo $buz_company_name; ?>" >
+		 	<input required class="regular-text" type="text" name="<?php echo 'buz_company_name_el'; ?>" value="<?php echo $buz_company_name; ?>" >
 		</div>
 		<p class="description"><?php _e('Enter Google Business name.', $this->plugin_name) ?></p>
 
@@ -301,7 +328,7 @@ class Buz_Google_Reviews_Admin {
 		} 
 
 		return trim($input);
-}
+	}
 
 
 	public function buz_fetch_reviews(){
