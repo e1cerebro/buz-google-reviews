@@ -128,21 +128,31 @@ class Buz_Google_Reviews_Admin {
 						$menu_slug  = $this->plugin_name, 
 						$function   = [$this, 'buz_admin_menu_cb'], 
 						$icon_url   = 'dashicons-star-filled');
+
 	}
 
 	public function buz_admin_menu_cb(){
 		include_once( 'partials/buz-google-reviews-admin-display.php' );
 	}
 
-
 	public function buz_settings_options(){
 		
+		/******** SECTION SETTINGS ********/
 		add_settings_section(
 			'buz_general_section',
 			__( 'General Settings', $this->plugin_name ),
 			[$this, 'buz_general_settings_section_cb' ],
 			$this->plugin_name
 		);
+
+		add_settings_section(
+			'buz_slider_section',
+			__( 'Slider Settings', $this->plugin_name ),
+			[$this, 'buz_general_settings_section_cb' ],
+			$this->plugin_name
+		);
+
+		/********FIELDS SETTINGS********/
 
 		/* Google Api */
 		add_settings_field(
@@ -155,7 +165,7 @@ class Buz_Google_Reviews_Admin {
 
 		register_setting( $this->plugin_name, 'buz_google_api_el');
 		
-		/* Google Api */
+		/* Company Name  */
 		add_settings_field(
 			'buz_company_name_el',
 			__( 'Company Name', $this->plugin_name ),
@@ -163,11 +173,10 @@ class Buz_Google_Reviews_Admin {
 			$this->plugin_name,
 			'buz_general_section'
  		);
-
 		register_setting( $this->plugin_name, 'buz_company_name_el', [$this, 'buz_company_name_sanitize_input']);
 		
 		
-		/* Google Api */
+		/* Toggle company name */
 		add_settings_field(
 			'buz_toggle_company_name_el',
 			__( 'Show/Hide Company Name', $this->plugin_name ),
@@ -175,9 +184,9 @@ class Buz_Google_Reviews_Admin {
 			$this->plugin_name,
 			'buz_general_section'
  		);
-
 		register_setting( $this->plugin_name, 'buz_toggle_company_name_el');
 		
+		/* Toggle company logo */
 		add_settings_field(
 			'buz_google_logo_el',
 			__( 'Show/Hide Google Logo', $this->plugin_name ),
@@ -185,10 +194,9 @@ class Buz_Google_Reviews_Admin {
 			$this->plugin_name,
 			'buz_general_section'
  		);
-
 		register_setting( $this->plugin_name, 'buz_google_logo_el');
 		
-		
+		/* Toggle company review rating */
 		add_settings_field(
 			'buz_company_review_star_el',
 			__( 'Show/Hide Company Review Star', $this->plugin_name ),
@@ -196,9 +204,9 @@ class Buz_Google_Reviews_Admin {
 			$this->plugin_name,
 			'buz_general_section'
  		);
-
 		register_setting( $this->plugin_name, 'buz_company_review_star_el');
-		
+
+		/* Toggle see all reviews button */
 		add_settings_field(
 			'buz_toggle_see_all_el',
 			__( 'Toggle See All Button', $this->plugin_name ),
@@ -206,19 +214,69 @@ class Buz_Google_Reviews_Admin {
 			$this->plugin_name,
 			'buz_general_section'
  		);
-
 		register_setting( $this->plugin_name, 'buz_toggle_see_all_el');
 
+		 /**** SLIDER SETTINGS *****/
 
+		/* Show Min review ratings */
 		add_settings_field(
 			'buz_show_min_review_el',
 			__( 'Show Min Rating', $this->plugin_name ),
 			[ $this,'buz_show_min_review_cb'],
 			$this->plugin_name,
-			'buz_general_section'
+			'buz_slider_section'
  		);
-
 		register_setting( $this->plugin_name, 'buz_show_min_review_el');
+	
+		/* Show Reviews Per Row */
+		add_settings_field(
+			'buz_reviews_per_row_el',
+			__( 'Reviews Per Row', $this->plugin_name ),
+			[ $this,'buz_reviews_per_row_cb'],
+			$this->plugin_name,
+			'buz_slider_section');
+
+		register_setting( $this->plugin_name, 'buz_reviews_per_row_el');
+		
+		/* Show Reviews Per Row */
+		add_settings_field(
+			'buz_show_pagination_el',
+			__( 'Toggle Pagination', $this->plugin_name ),
+			[ $this,'buz_show_pagination_cb'],
+			$this->plugin_name,
+			'buz_slider_section');
+
+		register_setting( $this->plugin_name, 'buz_show_pagination_el');
+	
+		/* Show Reviews Per Row */
+		add_settings_field(
+			'buz_show_navigation_el',
+			__( 'Toggle Navigation', $this->plugin_name ),
+			[ $this,'buz_show_navigation_cb'],
+			$this->plugin_name,
+			'buz_slider_section');
+
+		register_setting( $this->plugin_name, 'buz_show_navigation_el');
+	
+		/* Next Nav Text */
+		add_settings_field(
+			'buz_next_nav_text_el',
+			__( 'Next Navigation Text', $this->plugin_name ),
+			[ $this,'buz_next_nav_text_cb'],
+			$this->plugin_name,
+			'buz_slider_section');
+
+		register_setting( $this->plugin_name, 'buz_next_nav_text_el');
+	
+		/* Prev Nav Text */
+		add_settings_field(
+			'buz_prev_nav_text_el',
+			__( 'Prev Navigation Text', $this->plugin_name ),
+			[ $this,'buz_prev_nav_text_cb'],
+			$this->plugin_name,
+			'buz_slider_section');
+
+		register_setting( $this->plugin_name, 'buz_prev_nav_text_el');
 
 	}
 
@@ -261,11 +319,25 @@ class Buz_Google_Reviews_Admin {
 		<select class="ui dropdown" name="buz_show_min_review_el" >
 			<option value="1" <?php echo '1' == $buz_show_min_review ? 'SELECTED' : ''; ?>>1</option>
 			<option value="2" <?php echo '2' == $buz_show_min_review ? 'SELECTED' : ''; ?>>2</option>
-			<option value="2" <?php echo '3' == $buz_show_min_review ? 'SELECTED' : ''; ?>>3</option>
-			<option value="2" <?php echo '4' == $buz_show_min_review ? 'SELECTED' : ''; ?>>4</option>
-			<option value="2" <?php echo '5' == $buz_show_min_review ? 'SELECTED' : ''; ?>>5</option>
+			<option value="3" <?php echo '3' == $buz_show_min_review ? 'SELECTED' : ''; ?>>3</option>
+			<option value="4" <?php echo '4' == $buz_show_min_review ? 'SELECTED' : ''; ?>>4</option>
+			<option value="5" <?php echo '5' == $buz_show_min_review ? 'SELECTED' : ''; ?>>5</option>
 		</select>
 		<p class="description"><?php _e('Minimum rating to display to the visitors', $this->plugin_name) ?></p>
+		<?php
+	}
+	/* Display the input controls foe the google API settings */
+	public function buz_reviews_per_row_cb(){
+
+		$buz_reviews_per_row =  get_option('buz_reviews_per_row_el'); 
+		?>
+		<select class="ui dropdown" name="buz_reviews_per_row_el" >
+			<option value="1" <?php echo '1' == $buz_reviews_per_row ? 'SELECTED' : ''; ?>>1</option>
+			<option value="2" <?php echo '2' == $buz_reviews_per_row ? 'SELECTED' : ''; ?>>2</option>
+			<option value="3" <?php echo '3' == $buz_reviews_per_row ? 'SELECTED' : ''; ?>>3</option>
+			<option value="4" <?php echo '4' == $buz_reviews_per_row ? 'SELECTED' : ''; ?>>4</option>
+		</select>
+		<p class="description"><?php _e('Display Number Of Reviews Per Row', $this->plugin_name) ?></p>
 		<?php
 	}
 
@@ -297,12 +369,34 @@ class Buz_Google_Reviews_Admin {
 
 	/* Display the input controls foe the google API settings */
 	public function buz_toggle_see_all_cb(){
-
 		$buz_toggle_see_all =  get_option('buz_toggle_see_all_el'); 
 		?>
 		<div class="ui toggle checkbox">
 			<input type="checkbox" id="buz_toggle_see_all_el" name="buz_toggle_see_all_el" value = "1" <?php echo 1 == $buz_toggle_see_all ? 'checked' : ''; ?> >
 			<label for="buz_toggle_see_all_el">Toggle to Show or Hide option</label>
+		</div>
+		<?php
+	}
+	
+
+	/* Display the input controls foe the google API settings */
+	public function buz_show_pagination_cb(){
+		$buz_show_pagination =  get_option('buz_show_pagination_el'); 
+		?>
+		<div class="ui toggle checkbox">
+			<input type="checkbox" id="buz_show_pagination_el" name="buz_show_pagination_el" value = "true" <?php echo true == $buz_show_pagination ? 'checked' : ''; ?> >
+			<label for="buz_show_pagination_el">Show/Hide Pagination Links</label>
+		</div>
+		<?php
+	}
+
+	/* Display the input controls foe the google API settings */
+	public function buz_show_navigation_cb(){
+		$buz_show_navigation =  get_option('buz_show_navigation_el'); 
+		?>
+		<div class="ui toggle checkbox">
+			<input type="checkbox" id="buz_show_navigation_el" name="buz_show_navigation_el" value = "true" <?php echo true == $buz_show_navigation ? 'checked' : ''; ?> >
+			<label for="buz_show_navigation_el">Show/Hide Navigation Links</label>
 		</div>
 		<?php
 	}
@@ -317,9 +411,30 @@ class Buz_Google_Reviews_Admin {
 
 		<?php
 	}
-
-
 	
+	public function buz_prev_nav_text_cb(){
+		$buz_prev_nav_text =  get_option('buz_prev_nav_text_el'); 
+		?>
+		<div class="ui input">
+		 	<input required class="regular-text" type="text" name="<?php echo 'buz_prev_nav_text_el'; ?>" value="<?php echo $buz_prev_nav_text; ?>" >
+		</div>
+		<p class="description"><?php _e('Previous Navigation Text', $this->plugin_name) ?></p>
+
+		<?php
+	}
+	
+	public function buz_next_nav_text_cb(){
+		$buz_next_nav_text =  get_option('buz_next_nav_text_el'); 
+		?>
+		<div class="ui input">
+		 	<input required class="regular-text" type="text" name="<?php echo 'buz_next_nav_text_el'; ?>" value="<?php echo $buz_next_nav_text; ?>" >
+		</div>
+		<p class="description"><?php _e('Next Navigation Text', $this->plugin_name) ?></p>
+
+		<?php
+	}
+
+
 	public function buz_company_name_sanitize_input($input){
 		$old_comp_name = get_option('buz_company_name_el');
 
@@ -328,6 +443,10 @@ class Buz_Google_Reviews_Admin {
 		} 
 
 		return trim($input);
+	}
+
+	public function Buz_test($x){
+		die($x);
 	}
 
 
@@ -637,6 +756,8 @@ class Buz_Google_Reviews_Admin {
 					array('status'=>$check_status), 
 					array('author_id' => $author_id )
 				);
+
+				delete_transient('buz_reviews_trans');
 
 		wp_send_json($check_status." ".$author_id);
 	}

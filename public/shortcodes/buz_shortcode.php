@@ -18,7 +18,9 @@
         }
 
         require_once plugin_dir_path( __FILE__ ) . '../../includes/process/buz-functions.php';
-
+       
+        //pause the buffer content!
+        ob_start();
 
   ?>
   <div class="buz-reviews-public">
@@ -67,5 +69,7 @@
                 </div>
     </div>
   <?php
-       
+               $editor_contents    = ob_get_clean();
+
+               return $editor_contents;
     }

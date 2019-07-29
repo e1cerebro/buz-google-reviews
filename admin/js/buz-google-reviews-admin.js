@@ -42,12 +42,12 @@ function getReviews(this_el, query_mode){
 			data:   ajax_args,
 			success: function(response) {
 
-				console.log("Response", response);
+				//console.log("Response", response);
 				if('ignore' != response.updated_review_from_api){
 					
-					console.log('New Review Was Found');
+					//console.log('New Review Was Found');
 				}else{
-					console.log('No New Review Was Found');
+					//console.log('No New Review Was Found');
 				}
 
 
@@ -148,7 +148,7 @@ jQuery(document).ready(function($) {
 			data:   form,
 			success: function(response) {
 				enableSelect(this_el)
-				console.log(response);
+				//console.log(response);
 			}
 		});
 	});

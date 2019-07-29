@@ -30,8 +30,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-global $wpdb;
-$wpdb->query("DROP TABLE IF EXISTS `".$wpdb->prefix."buz_google_reviews` ");
+	global $wpdb;
+	$wpdb->query("DROP TABLE IF EXISTS `".$wpdb->prefix."buz_google_reviews` ");
 
 
 	//Delete options
@@ -48,3 +48,9 @@ $wpdb->query("DROP TABLE IF EXISTS `".$wpdb->prefix."buz_google_reviews` ");
  	delete_option('buz_google_api_el');
  
  	delete_option('buz_company_name_el');
+ 
+	 delete_option('buz_reviews_per_row_el');
+	 
+	 delete_option('buz_next_nav_text_el');
+	 
+ 	 delete_option('buz_prev_nav_text_el');

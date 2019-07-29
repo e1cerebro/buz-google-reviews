@@ -159,7 +159,7 @@ class Buz_Google_Reviews {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'buz_admin_menu' );
 		 $this->loader->add_action( 'admin_init', $plugin_admin, 'buz_settings_options' );
 		 
-		 
+
 		$this->loader->add_action('wp_ajax_buz_fetch_reviews',  $plugin_admin, 'buz_fetch_reviews');
 		$this->loader->add_action('wp_ajax_nopriv_buz_fetch_reviews',  $plugin_admin, 'buz_fetch_reviews');
 		
