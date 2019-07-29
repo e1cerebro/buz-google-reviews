@@ -1,6 +1,6 @@
 <?php
 
-    add_shortcode('g_reviews', 'buz_show_reviews');
+    add_shortcode('gbr_reviews', 'buz_show_reviews');
 
     function buz_show_reviews($attr){
         extract(shortcode_atts(array(
