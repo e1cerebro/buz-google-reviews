@@ -114,7 +114,8 @@ class Buz_Google_Reviews_Public {
 				'buz_show_pagination_el' 	 => get_option('buz_show_pagination_el'),
 				'buz_show_navigation_el' 	 => get_option('buz_show_navigation_el'),
 				'buz_next_nav_text_el' 	 	 => get_option('buz_next_nav_text_el'),
-				'buz_prev_nav_text_el' 	 	 => get_option('buz_prev_nav_text_el')
+				'buz_prev_nav_text_el' 	 	 => get_option('buz_prev_nav_text_el'),
+				'buz_slider_speed_el' 	 	 => get_option('buz_slider_speed_el')
 			]
 		);
  

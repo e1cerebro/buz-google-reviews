@@ -54,3 +54,5 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	 delete_option('buz_next_nav_text_el');
 	 
  	 delete_option('buz_prev_nav_text_el');
+	 
+ 	 delete_option('buz_slider_speed_el');

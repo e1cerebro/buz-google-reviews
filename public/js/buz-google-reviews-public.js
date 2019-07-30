@@ -27,7 +27,7 @@ jQuery(document).ready(function($) {
 		navigation:buz_show_navigation_el,
 		navigationText:[buz_prev_nav_text_el,buz_next_nav_text_el],
 
-		slideSpeed:1000,
+		slideSpeed:buz_vars.buz_slider_speed_el,
 		autoPlay:true,
 
 		lazyLoad : true,
@@ -35,6 +35,8 @@ jQuery(document).ready(function($) {
 
 		touchDrag: true,
 		paginationNumbers: true,
+
+		stopOnHover: true,
 
 
 	});

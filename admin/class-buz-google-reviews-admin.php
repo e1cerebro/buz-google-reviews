@@ -277,6 +277,16 @@ class Buz_Google_Reviews_Admin {
 			'buz_slider_section');
 
 		register_setting( $this->plugin_name, 'buz_prev_nav_text_el');
+	
+		/* Slider Speed */
+		add_settings_field(
+			'buz_slider_speed_el',
+			__( 'Slider Speed', $this->plugin_name ),
+			[ $this,'buz_slider_speed_cb'],
+			$this->plugin_name,
+			'buz_slider_section');
+
+		register_setting( $this->plugin_name, 'buz_slider_speed_el', [$this, 'buz_slider_speed_sanitize_input']);
 
 	}
 
@@ -289,12 +299,20 @@ class Buz_Google_Reviews_Admin {
 
 	/* Display the input controls foe the google API settings */
 	public function buz_google_api_cb(){
-		$buz_google_api =  get_option('buz_google_api_el'); 
+		$buz_google_api =  get_option('buz_google_api_el');
+		
+		$api_setup_link  = "Set the google API key here. ";
+		$api_setup_link .= "<a target='_blank' href='".esc_url('https://developers.google.com/maps/documentation/javascript/get-api-key')."'>";
+		$api_setup_link .= "Click here to create a google API";
+		$api_setup_link .= "</a>";
+
+
+
 		?>
 		<div class="ui input">
 		 	<input class="regular-text" type="text" name="<?php echo 'buz_google_api_el'; ?>" value="<?php echo $buz_google_api; ?>" >
 		</div>
-		<p class="description"><?php _e('Set the google Api key here.', $this->plugin_name) ?></p>
+		<p class="description"><?php _e($api_setup_link, $this->plugin_name) ?></p>
 
 		<?php
 	}
@@ -434,6 +452,24 @@ class Buz_Google_Reviews_Admin {
 		<?php
 	}
 
+	public function buz_slider_speed_cb(){
+		$buz_slider_speed =  get_option('buz_slider_speed_el'); 
+		?>
+		<div class="ui input">
+		 	<input required class="regular-text" min="100" type="number" name="<?php echo 'buz_slider_speed_el'; ?>" value="<?php echo $buz_slider_speed; ?>" >
+		</div>
+		<p class="description"><?php _e('Set the slider speed. Default is 1000', $this->plugin_name) ?></p>
+
+		<?php
+	}
+
+	public function buz_slider_speed_sanitize_input($input){
+		$value =  trim($input);
+		$value =  (int)$value;
+		//die(gettype($value));
+
+		return is_int($value) ? $value : 1000;
+	}
 
 	public function buz_company_name_sanitize_input($input){
 		$old_comp_name = get_option('buz_company_name_el');
