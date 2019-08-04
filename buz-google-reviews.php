@@ -14,10 +14,10 @@
  *
  * @wordpress-plugin
  * Plugin Name:       WP Google Business Reviews
- * Plugin URI:        #
+ * Plugin URI:        https://github.com/e1cerebro/buz-google-reviews
  * Description:       This plugin shows your business reviews on your website using shortcodes
  * Version:           1.0.0
- * Author:            Uchenna Nwachukwu
+ * Author:            Christian Uche
  * Author URI:        #
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -36,7 +36,11 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'BUZ_GOOGLE_REVIEWS_VERSION', '1.0.0' );
-
+define( 'LOADING_IMAGE_PATH', plugin_dir_url( __FILE__ ).'includes/images/loading.gif'  );
+define( 'GOOGLE_IMAGE_PATH', plugin_dir_url( __FILE__ ).'includes/images/powered_by_google_on_white.png'  );
+/* Text Domain Constant */
+define( 'TEXT_DOMAIN','buz-google-reviews');
+ 
  
 /**
  * The code that runs during plugin activation.
@@ -86,15 +90,12 @@ if(!is_admin()){
 	require_once plugin_dir_path( __FILE__ ) . 'public/shortcodes/buz_shortcode.php';
 }
 
-define( 'LOADING_IMAGE_PATH', plugin_dir_url( __FILE__ ).'includes/images/loading.gif'  );
-define( 'GOOGLE_IMAGE_PATH', plugin_dir_url( __FILE__ ).'includes/images/powered_by_google_on_white.png'  );
- 
-
-add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), 'buz_add_plugin_page_settings_link' );
-
-function buz_add_plugin_page_settings_link($links){
+add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), function($links){
 	$links[] = '<a href="' .
 		admin_url( 'admin.php?page=buz-google-reviews' ) .
-		'">' . __('Settings') . '</a>';
+		'">' . __('Settings', TEXT_DOMAIN) . '</a>';
 	return $links;
-}
+} );
+
+
+

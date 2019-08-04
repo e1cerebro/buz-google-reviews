@@ -59,7 +59,7 @@ class Buz_Google_Reviews_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles($hook_suffix) {
+	public function buz_admin_enqueue_styles($hook_suffix) {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -79,7 +79,7 @@ class Buz_Google_Reviews_Admin {
 		}
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/buz-google-reviews-admin.css', array(), $this->version, 'all' );
-		wp_enqueue_style( $this->plugin_name.'-semantic-ui-css', 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.css', array(), time() );
+		wp_enqueue_style( $this->plugin_name.'-semantic-ui-css', 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.css', array(), $this->version );
 
 
 	}
@@ -89,7 +89,7 @@ class Buz_Google_Reviews_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts($hook_suffix) {
+	public function buz_admin_enqueue_scripts($hook_suffix) {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -108,7 +108,7 @@ class Buz_Google_Reviews_Admin {
 			return;
 		}
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/buz-google-reviews-admin.js', array( 'jquery' ), time(), false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/buz-google-reviews-admin.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name.'-semantic-ui-js', 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.js');
 		
 		wp_localize_script($this->plugin_name, 
@@ -122,8 +122,8 @@ class Buz_Google_Reviews_Admin {
 
 	public function buz_admin_menu(){
 		add_menu_page(
-						$page_title = 'Google Reviews',
-						$menu_title = 'Google Reviews', 
+						$page_title = __('Google Reviews',TEXT_DOMAIN),
+						$menu_title = __('Google Reviews', TEXT_DOMAIN), 
 						$capability = 'manage_options', 
 						$menu_slug  = $this->plugin_name, 
 						$function   = [$this, 'buz_admin_menu_cb'], 
@@ -140,14 +140,14 @@ class Buz_Google_Reviews_Admin {
 		/******** SECTION SETTINGS ********/
 		add_settings_section(
 			'buz_general_section',
-			__( 'General Settings', $this->plugin_name ),
+			__( 'General Settings', TEXT_DOMAIN ),
 			[$this, 'buz_general_settings_section_cb' ],
 			$this->plugin_name
 		);
 
 		add_settings_section(
 			'buz_slider_section',
-			__( 'Slider Settings', $this->plugin_name ),
+			__( 'Slider Settings', TEXT_DOMAIN ),
 			[$this, 'buz_general_settings_section_cb' ],
 			$this->plugin_name
 		);
@@ -157,7 +157,7 @@ class Buz_Google_Reviews_Admin {
 		/* Google Api */
 		add_settings_field(
 			'buz_google_api_el',
-			__( 'Google Api Key', $this->plugin_name ),
+			__( 'Google Api Key', TEXT_DOMAIN),
 			[ $this,'buz_google_api_cb'],
 			$this->plugin_name,
 			'buz_general_section'
@@ -168,7 +168,7 @@ class Buz_Google_Reviews_Admin {
 		/* Company Name  */
 		add_settings_field(
 			'buz_company_name_el',
-			__( 'Company Name', $this->plugin_name ),
+			__( 'Company Name', TEXT_DOMAIN ),
 			[ $this,'buz_company_name_cb'],
 			$this->plugin_name,
 			'buz_general_section'
@@ -179,7 +179,7 @@ class Buz_Google_Reviews_Admin {
 		/* Toggle company name */
 		add_settings_field(
 			'buz_toggle_company_name_el',
-			__( 'Show/Hide Company Name', $this->plugin_name ),
+			__( 'Show/Hide Company Name', TEXT_DOMAIN ),
 			[ $this,'buz_toggle_company_name_cb'],
 			$this->plugin_name,
 			'buz_general_section'
@@ -189,7 +189,7 @@ class Buz_Google_Reviews_Admin {
 		/* Toggle company logo */
 		add_settings_field(
 			'buz_google_logo_el',
-			__( 'Show/Hide Google Logo', $this->plugin_name ),
+			__( 'Show/Hide Google Logo', TEXT_DOMAIN ),
 			[ $this,'buz_google_logo_cb'],
 			$this->plugin_name,
 			'buz_general_section'
@@ -199,7 +199,7 @@ class Buz_Google_Reviews_Admin {
 		/* Toggle company review rating */
 		add_settings_field(
 			'buz_company_review_star_el',
-			__( 'Show/Hide Company Review Star', $this->plugin_name ),
+			__( 'Show/Hide Company Review Star', TEXT_DOMAIN ),
 			[ $this,'buz_company_review_star_cb'],
 			$this->plugin_name,
 			'buz_general_section'
@@ -209,7 +209,7 @@ class Buz_Google_Reviews_Admin {
 		/* Toggle see all reviews button */
 		add_settings_field(
 			'buz_toggle_see_all_el',
-			__( 'Toggle See All Button', $this->plugin_name ),
+			__( 'Toggle See All Button', TEXT_DOMAIN ),
 			[ $this,'buz_toggle_see_all_cb'],
 			$this->plugin_name,
 			'buz_general_section'
@@ -221,7 +221,7 @@ class Buz_Google_Reviews_Admin {
 		/* Show Min review ratings */
 		add_settings_field(
 			'buz_show_min_review_el',
-			__( 'Show Min Rating', $this->plugin_name ),
+			__( 'Show Min Rating', TEXT_DOMAIN ),
 			[ $this,'buz_show_min_review_cb'],
 			$this->plugin_name,
 			'buz_slider_section'
@@ -231,7 +231,7 @@ class Buz_Google_Reviews_Admin {
 		/* Show Reviews Per Row */
 		add_settings_field(
 			'buz_reviews_per_row_el',
-			__( 'Reviews Per Row', $this->plugin_name ),
+			__( 'Reviews Per Row', TEXT_DOMAIN ),
 			[ $this,'buz_reviews_per_row_cb'],
 			$this->plugin_name,
 			'buz_slider_section');
@@ -241,7 +241,7 @@ class Buz_Google_Reviews_Admin {
 		/* Show Reviews Per Row */
 		add_settings_field(
 			'buz_show_pagination_el',
-			__( 'Toggle Pagination', $this->plugin_name ),
+			__( 'Toggle Pagination',TEXT_DOMAIN ),
 			[ $this,'buz_show_pagination_cb'],
 			$this->plugin_name,
 			'buz_slider_section');
@@ -251,7 +251,7 @@ class Buz_Google_Reviews_Admin {
 		/* Show Reviews Per Row */
 		add_settings_field(
 			'buz_show_navigation_el',
-			__( 'Toggle Navigation', $this->plugin_name ),
+			__( 'Toggle Navigation', TEXT_DOMAIN ),
 			[ $this,'buz_show_navigation_cb'],
 			$this->plugin_name,
 			'buz_slider_section');
@@ -261,7 +261,7 @@ class Buz_Google_Reviews_Admin {
 		/* Next Nav Text */
 		add_settings_field(
 			'buz_next_nav_text_el',
-			__( 'Next Navigation Text', $this->plugin_name ),
+			__( 'Next Navigation Text', TEXT_DOMAIN ),
 			[ $this,'buz_next_nav_text_cb'],
 			$this->plugin_name,
 			'buz_slider_section');
@@ -271,7 +271,7 @@ class Buz_Google_Reviews_Admin {
 		/* Prev Nav Text */
 		add_settings_field(
 			'buz_prev_nav_text_el',
-			__( 'Prev Navigation Text', $this->plugin_name ),
+			__( 'Prev Navigation Text', TEXT_DOMAIN ),
 			[ $this,'buz_prev_nav_text_cb'],
 			$this->plugin_name,
 			'buz_slider_section');
@@ -281,7 +281,7 @@ class Buz_Google_Reviews_Admin {
 		/* Slider Speed */
 		add_settings_field(
 			'buz_slider_speed_el',
-			__( 'Slider Speed', $this->plugin_name ),
+			__( 'Slider Speed', TEXT_DOMAIN ),
 			[ $this,'buz_slider_speed_cb'],
 			$this->plugin_name,
 			'buz_slider_section');
@@ -306,13 +306,11 @@ class Buz_Google_Reviews_Admin {
 		$api_setup_link .= "Click here to create a google API";
 		$api_setup_link .= "</a>";
 
-
-
 		?>
 		<div class="ui input">
 		 	<input class="regular-text" type="text" name="<?php echo 'buz_google_api_el'; ?>" value="<?php echo $buz_google_api; ?>" >
 		</div>
-		<p class="description"><?php _e($api_setup_link, $this->plugin_name) ?></p>
+		<p class="description"><?php _e($api_setup_link, TEXT_DOMAIN) ?></p>
 
 		<?php
 	}
@@ -324,7 +322,7 @@ class Buz_Google_Reviews_Admin {
 		?>
 		<div class="ui toggle checkbox">
 			<input type="checkbox" id="buz_google_logo_el" name="buz_google_logo_el" value = "1" <?php echo 1 == $buz_google_logo ? 'checked' : ''; ?> >
-			<label for="buz_google_logo_el">Toggle to Show or Hide option</label>
+			<label for="buz_google_logo_el"><?php _e('Toggle to Show or Hide option', TEXT_DOMAIN); ?></label>
 		</div>
 		<?php
 	}
@@ -341,7 +339,7 @@ class Buz_Google_Reviews_Admin {
 			<option value="4" <?php echo '4' == $buz_show_min_review ? 'SELECTED' : ''; ?>>4</option>
 			<option value="5" <?php echo '5' == $buz_show_min_review ? 'SELECTED' : ''; ?>>5</option>
 		</select>
-		<p class="description"><?php _e('Minimum rating to display to the visitors', $this->plugin_name) ?></p>
+		<p class="description"><?php _e('Minimum rating to display to the visitors', TEXT_DOMAIN) ?></p>
 		<?php
 	}
 	/* Display the input controls foe the google API settings */
@@ -355,7 +353,7 @@ class Buz_Google_Reviews_Admin {
 			<option value="3" <?php echo '3' == $buz_reviews_per_row ? 'SELECTED' : ''; ?>>3</option>
 			<option value="4" <?php echo '4' == $buz_reviews_per_row ? 'SELECTED' : ''; ?>>4</option>
 		</select>
-		<p class="description"><?php _e('Display Number Of Reviews Per Row', $this->plugin_name) ?></p>
+		<p class="description"><?php _e('Display Number Of Reviews Per Row', TEXT_DOMAIN) ?></p>
 		<?php
 	}
 
@@ -366,7 +364,7 @@ class Buz_Google_Reviews_Admin {
 		?>
 		<div class="ui toggle checkbox">
 			<input type="checkbox" id="buz_company_review_star_el" name="buz_company_review_star_el" value = "1" <?php echo 1 == $buz_company_review_star ? 'checked' : ''; ?> >
-			<label for="buz_company_review_star_el">Toggle to Show or Hide option</label>
+			<label for="buz_company_review_star_el"> <?php _e('Toggle to Show or Hide option',TEXT_DOMAIN); ?> </label>
 		</div>
 		<?php
 	}
@@ -379,7 +377,7 @@ class Buz_Google_Reviews_Admin {
 		?>
 		<div class="ui toggle checkbox">
 			<input type="checkbox" id="buz_toggle_company_name_el" name="buz_toggle_company_name_el" value = "1" <?php echo 1 == $buz_toggle_company_name ? 'checked' : ''; ?> >
-			<label for="buz_toggle_company_name_el">Toggle to Show or Hide option</label>
+			<label for="buz_toggle_company_name_el"><?php _e('Toggle to Show or Hide option', TEXT_DOMAIN); ?></label>
 		</div>
 		<?php
 	}
@@ -391,7 +389,7 @@ class Buz_Google_Reviews_Admin {
 		?>
 		<div class="ui toggle checkbox">
 			<input type="checkbox" id="buz_toggle_see_all_el" name="buz_toggle_see_all_el" value = "1" <?php echo 1 == $buz_toggle_see_all ? 'checked' : ''; ?> >
-			<label for="buz_toggle_see_all_el">Toggle to Show or Hide option</label>
+			<label for="buz_toggle_see_all_el"><?php _e('Toggle to Show or Hide option', TEXT_DOMAIN) ?></label>
 		</div>
 		<?php
 	}
@@ -403,7 +401,7 @@ class Buz_Google_Reviews_Admin {
 		?>
 		<div class="ui toggle checkbox">
 			<input type="checkbox" id="buz_show_pagination_el" name="buz_show_pagination_el" value = "true" <?php echo true == $buz_show_pagination ? 'checked' : ''; ?> >
-			<label for="buz_show_pagination_el">Show/Hide Pagination Links</label>
+			<label for="buz_show_pagination_el"><?php _e('Show/Hide Pagination Links', TEXT_DOMAIN) ?></label>
 		</div>
 		<?php
 	}
@@ -414,7 +412,7 @@ class Buz_Google_Reviews_Admin {
 		?>
 		<div class="ui toggle checkbox">
 			<input type="checkbox" id="buz_show_navigation_el" name="buz_show_navigation_el" value = "true" <?php echo true == $buz_show_navigation ? 'checked' : ''; ?> >
-			<label for="buz_show_navigation_el">Show/Hide Navigation Links</label>
+			<label for="buz_show_navigation_el"><?php _e('Show/Hide Navigation Links', TEXT_DOMAIN); ?></label>
 		</div>
 		<?php
 	}
@@ -425,7 +423,7 @@ class Buz_Google_Reviews_Admin {
 		<div class="ui input">
 		 	<input required class="regular-text" type="text" name="<?php echo 'buz_company_name_el'; ?>" value="<?php echo $buz_company_name; ?>" >
 		</div>
-		<p class="description"><?php _e('Enter Google Business name.', $this->plugin_name) ?></p>
+		<p class="description"><?php _e('Enter Google Business name.', TEXT_DOMAIN); ?></p>
 
 		<?php
 	}
@@ -436,7 +434,7 @@ class Buz_Google_Reviews_Admin {
 		<div class="ui input">
 		 	<input required class="regular-text" type="text" name="<?php echo 'buz_prev_nav_text_el'; ?>" value="<?php echo $buz_prev_nav_text; ?>" >
 		</div>
-		<p class="description"><?php _e('Previous Navigation Text', $this->plugin_name) ?></p>
+		<p class="description"><?php _e('Previous Navigation Text', TEXT_DOMAIN); ?></p>
 
 		<?php
 	}
@@ -447,7 +445,7 @@ class Buz_Google_Reviews_Admin {
 		<div class="ui input">
 		 	<input required class="regular-text" type="text" name="<?php echo 'buz_next_nav_text_el'; ?>" value="<?php echo $buz_next_nav_text; ?>" >
 		</div>
-		<p class="description"><?php _e('Next Navigation Text', $this->plugin_name) ?></p>
+		<p class="description"><?php _e('Next Navigation Text', TEXT_DOMAIN); ?></p>
 
 		<?php
 	}
@@ -458,7 +456,7 @@ class Buz_Google_Reviews_Admin {
 		<div class="ui input">
 		 	<input required class="regular-text" min="100" type="number" name="<?php echo 'buz_slider_speed_el'; ?>" value="<?php echo $buz_slider_speed; ?>" >
 		</div>
-		<p class="description"><?php _e('Set the slider speed. Default is 1000', $this->plugin_name) ?></p>
+		<p class="description"><?php _e('Set the slider speed. Default is 1000', TEXT_DOMAIN); ?></p>
 
 		<?php
 	}
@@ -466,7 +464,6 @@ class Buz_Google_Reviews_Admin {
 	public function buz_slider_speed_sanitize_input($input){
 		$value =  trim($input);
 		$value =  (int)$value;
-		//die(gettype($value));
 
 		return is_int($value) ? $value : 1000;
 	}
@@ -495,85 +492,69 @@ class Buz_Google_Reviews_Admin {
 		$last_db_review    =  $this->buz_get_last_bd_review();
 		$buz_db_review     =  buz_get_db_reviews();
 		$output = [];
-
+		$output['API_ERROR'] = '';
 		$row_output = '';
 
 		$output['query_mode'] = $_POST['query_mode'];
 
-		//Normal Page Reload
+		//Normal Page Reload:
 		if('fetch_db' == $_POST['query_mode']){
-				//Reviews is in DB and last DB review === API last review = Get reviews from DB and don't insert new one
+				//'DB Exists and equal to API => Fetch from BD'
 				if(sizeof($buz_db_review) > 0){
 					
 					$output['updated_review_from_api']   = 'ignore';
-					$output['status'] = 'DB Exists and equal to API => Fetch from BD';
-
+ 
 					foreach( $buz_db_review as  $review){
-						$response_template = file_get_contents($file, true);
+						/* Get the templates contents */
+						$response_template 		= file_get_contents($file, true);
+						/* Overwrite the placeholder contents from the template file */
+						$response_template 		= str_replace(NAME, $review->author_name , $response_template);
+						$response_template 		= str_replace(ROW_ID, $review->ID , $response_template);
+						$response_template 		= str_replace(PHOTO_URL, $review->profile_photo_url , $response_template);
+						$response_template 		= str_replace(REVIEW_TEXT, $review->text , $response_template);
+						$rating					= sprintf("%.1f", $review->rating);
+						$response_template 		= str_replace(RATING, $rating , $response_template);
+						$response_template 		= str_replace(DATE_DSC, $review->relative_time , $response_template);
 
-						$response_template = str_replace(NAME, $review->author_name , $response_template);
-						$response_template = str_replace(ROW_ID, $review->ID , $response_template);
-						$response_template = str_replace(PHOTO_URL, $review->profile_photo_url , $response_template);
-						$response_template = str_replace(REVIEW_TEXT, $review->text , $response_template);
-						$rating			= sprintf("%.1f", $review->rating);
-						$response_template = str_replace(RATING, $rating , $response_template);
-						$response_template = str_replace(DATE_DSC, $review->relative_time , $response_template);
+						$checked 		   		= 'show' == buz_get_review_status($review->author_id) ? 'checked' : '';
 
-						$checked 		   = 'show' == buz_get_review_status($review->author_id) ? 'checked' : '';
+						$toggle_status 			= '<div class="ui checkbox toggle">';
+						$toggle_status 		   .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
+						$toggle_status 		   .= '</div>';
 
-						$toggle_status =  '<div class="ui checkbox toggle">';
-						$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
-						$toggle_status .= '</div>';
+						$response_template 		= str_replace(TOGGLE_STATUS, $toggle_status , $response_template);
 
-						$response_template = str_replace(TOGGLE_STATUS, $toggle_status , $response_template);
-
-		
-						$row_output.= $response_template;
+						$row_output			   .= $response_template;
 					}
 
 					set_buz_transient_data();
-					$output['API_ERROR'] = '';
+					
 			}else{
-				$output['API_ERROR'] = 'No reviews were found';
+					$output['API_ERROR'] 		= __('No reviews were found', TEXT_DOMAIN);
 			}
 		}
 		//Fetch Query Clicked
 		elseif('fetch_new' ==  $_POST['query_mode']){
 
-			$buz_google_api =  trim(get_option('buz_google_api_el'));
-			$companyName = urlencode(get_option('buz_company_name_el'));
+			$buz_google_api 	= trim(get_option('buz_google_api_el'));
+			$companyName 		= urlencode(get_option('buz_company_name_el'));
 
-			$referenceObj = file_get_contents('https://maps.googleapis.com/maps/api/place/textsearch/json?query='.$companyName.'&sensor=true&key='.$buz_google_api);
-			$data = json_decode($referenceObj);
+			$referenceObj 		= file_get_contents('https://maps.googleapis.com/maps/api/place/textsearch/json?query='.$companyName.'&sensor=true&key='.$buz_google_api);
+			$data 				= json_decode($referenceObj);
 
-			$referenceID   = $data->results[0]->reference;
+			$referenceID   		= $data->results[0]->reference;
 
-			update_option('buz_reference_id', $referenceID);
+			$reviewsJson  		= file_get_contents('https://maps.googleapis.com/maps/api/place/details/json?reference='.$referenceID.'&key='.$buz_google_api);
+			$reviewsOBJ   		= json_decode($reviewsJson);
 
-			$reviewsJson  = file_get_contents('https://maps.googleapis.com/maps/api/place/details/json?reference='.$referenceID.'&key='.$buz_google_api);
-			$reviewsOBJ   	= json_decode($reviewsJson);
+			$companyAddress		= $reviewsOBJ->result->formatted_address;
+			$companyName		= $reviewsOBJ->result->name;
+			$companyPhone		= $reviewsOBJ->result->international_phone_number;
+			$companyRating		= $reviewsOBJ->result->rating;
+			$companyReviews		= $reviewsOBJ->result->reviews;
+			$queryStatus		= $reviewsOBJ->result->queryStatus;
 
-			$output['json_api'] = $reviewsOBJ;
-		
-			$companyAddress = $reviewsOBJ->result->formatted_address;
-			$companyName	= $reviewsOBJ->result->name;
-			$companyPhone	= $reviewsOBJ->result->international_phone_number;
-			$companyRating	= $reviewsOBJ->result->rating;
-			$companyReviews	= $reviewsOBJ->result->reviews;
-			$queryStatus	= $reviewsOBJ->result->queryStatus;
-
-			update_option('buz_company_rating', $companyRating);
-			
-		/* 	$results = [];
-			$results        = [
-					'companyAddress' => $companyAddress,
-					'companyName'    => $companyName,
-					'companyPhone'   => $companyPhone,
-					'companyRating'  => $companyRating,
-					'companyReviews' => $companyReviews,
-					'queryStatus'    => $queryStatus
-			]; */
-			//GEt the last row of the company review gotten from the API
+			//Get the last row of the company review gotten from the API result
 			$google_api_review = $companyReviews[4]->text;
 			
 			//If data was retrieved from the API request
@@ -581,6 +562,8 @@ class Buz_Google_Reviews_Admin {
 				$buz_db_review = [];
 				$last_db_review = [];
 				$this->buz_truncate_db_fc();
+				update_option('buz_reference_id', $referenceID);
+				update_option('buz_company_rating', $companyRating);
  		  }  
 
 		//Reviews is in DB and last DB review === API last review = Get reviews from DB and don't insert new one
@@ -596,9 +579,9 @@ class Buz_Google_Reviews_Admin {
 				$checked 		   = 'show' == buz_get_review_status($review->author_id) ? 'checked' : '';
 
 				//Build the checkbox
-				$toggle_status =  '<div class="ui checkbox toggle">';
-				$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
-				$toggle_status .= '</div>';
+				$toggle_status	   = '<div class="ui checkbox toggle">';
+				$toggle_status 	  .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
+				$toggle_status    .= '</div>';
 
 				//replace the constant placeholders with the values
 				$response_template = str_replace(NAME, $review->author_name , $response_template);
@@ -615,13 +598,9 @@ class Buz_Google_Reviews_Admin {
 
 			//Set the transient caching
 			set_buz_transient_data();
-			$output['API_ERROR'] = '';
 
-		//Reviews is in DB and last DB review != API last review = Get reviews from DB and don't insert new one
+		//'DB Exists But Not equal to API => Insert new Data'
 		}elseif(sizeof($buz_db_review) > 0 && strlen($reviewsOBJ->error_message) <= 0 && $last_db_review != $google_api_review ){
-
-				$output['updated_review_from_api']   = 'New Reviews Found';
-				$output['status'] = 'DB Exists But Not equal to API => Insert new Data';
 				
 				$this->buz_truncate_db_fc();
 
@@ -656,13 +635,9 @@ class Buz_Google_Reviews_Admin {
 
 				//Set the transient caching
 				set_buz_transient_data();
-				$output['API_ERROR'] = '';
-				
+			 
+			//DB Not Exists And Not equal to API => Insert new Data'
 			}elseif( sizeof($buz_db_review) <= 0 && strlen($reviewsOBJ->error_message) <= 0 && $last_db_review != $google_api_review ){
-
-					$output['updated_review_from_api']   = 'New Reviews Found';
-					$output['status'] = 'DB Not Exists And Not equal to API => Insert new Data';
-
 
 					foreach($companyReviews as  $review){
 						//Get the file contents for the template
@@ -672,13 +647,13 @@ class Buz_Google_Reviews_Admin {
 						$insert_id = $this->buz_insert_data($review);
 
 						//get the author ID
-						$path_array			= explode('/', $review->author_url);
+						$path_array		   = explode('/', $review->author_url);
 
 						$checked 		   =  'checked';
 
-						$toggle_status  =  '<div class="ui checkbox toggle">';
-						$toggle_status .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
-						$toggle_status .= '</div>';
+						$toggle_status     =  '<div class="ui checkbox toggle">';
+						$toggle_status 	  .= '<input type="checkbox" '.$checked.' class="show_hide_review" data-row_id = "'.$review->author_id.'"> <label></label>';
+						$toggle_status    .= '</div>';
 
 						//Replace the placeholders
 						$response_template = str_replace(NAME, $review->author_name , $response_template);
@@ -694,11 +669,10 @@ class Buz_Google_Reviews_Admin {
 
 					//Set the transient caching
 					set_buz_transient_data();
-					$output['API_ERROR'] = '';
-
+			 
+			//'DB Data Doesn\'t exits'
 			}elseif(sizeof($buz_db_review) <= 0 &&  $last_db_review != $google_api_review && strlen($reviewsOBJ->error_message) >=1){
-				$output['status'] 	 = 'DB Data Doesn\'t exits';
-				$output['API_ERROR'] = $reviewsOBJ->error_message;
+ 				$output['API_ERROR'] = $reviewsOBJ->error_message;
 			}else{
 				$output['API_ERROR'] = $reviewsOBJ->error_message;
  			}
@@ -708,11 +682,6 @@ class Buz_Google_Reviews_Admin {
 		$output['last_review']  		= $this->buz_get_bd_review();
 		$output['reviews'] 				= $companyReviews;
 
-		
-		$reviews = buz_get_db_reviews();
-
-       // $output['trans_sst'] =       set_transient( 'buz_reviews_trans', $reviews , 604800 );
-	  // delete_transient('buz_reviews_trans');
 		$output['transient_reviews'] 	= get_transient( 'buz_reviews_trans');
 
 		wp_send_json($output);
@@ -783,9 +752,9 @@ class Buz_Google_Reviews_Admin {
 		global $wpdb;
 
 		$check_status 	= $_POST['check_status'];
-		$author_id 	= $_POST['author_id'];
+		$author_id 		= $_POST['author_id'];
 
-		$table 		 = $wpdb->prefix.'buz_google_reviews';
+		$table 			= $wpdb->prefix.'buz_google_reviews';
 
 		$wpdb->update(
 						$table, 
@@ -803,7 +772,7 @@ class Buz_Google_Reviews_Admin {
 		global $wpdb;
 		$table 		 = $wpdb->prefix.'buz_google_reviews';
 
-		$delete = $wpdb->query("TRUNCATE TABLE $table");
+		$delete		 = $wpdb->query("TRUNCATE TABLE $table");
 
 		wp_send_json($delete);
 	}
@@ -812,7 +781,7 @@ class Buz_Google_Reviews_Admin {
 		global $wpdb;
 		$table 		 = $wpdb->prefix.'buz_google_reviews';
 
-		$delete = $wpdb->query("TRUNCATE TABLE $table");
+		$wpdb->query("TRUNCATE TABLE $table");
 	}
 
 }
