@@ -70,7 +70,34 @@ class Buz_Google_Reviews_Activator {
 		
 
 		if(strlen(get_option('buz_toggle_see_all_el')) <= 0){
-			update_option('buz_toggle_see_all_el', 1);
+			update_option('buz_toggle_see_all_el', 0);
+		}
+
+		if(strlen(get_option('buz_reviews_per_row_el')) <= 0){
+			update_option('buz_reviews_per_row_el', 1);
+		}
+
+		if(strlen(get_option('buz_show_pagination_el')) <= 0){
+			update_option('buz_show_pagination_el', 'true');
+		}
+		
+
+		if(strlen(get_option('buz_show_navigation_el')) <= 0){
+			update_option('buz_show_navigation_el', 'false');
+		}
+		
+
+		if(strlen(get_option('buz_next_nav_text_el')) <= 0){
+			update_option('buz_next_nav_text_el', 'Next');
+		}
+		
+
+		if(strlen(get_option('buz_prev_nav_text_el')) <= 0){
+			update_option('buz_prev_nav_text_el', 'Prev');
+		}
+
+		if(strlen(get_option('buz_slider_speed_el')) <= 0){
+			update_option('buz_slider_speed_el', '1000');
 		}
 		
 	

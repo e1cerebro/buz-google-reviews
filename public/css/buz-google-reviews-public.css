@@ -3,6 +3,23 @@
  * included in this file.
  */
 
+
+ .buz-reviews-public .owl-theme .owl-controls .owl-buttons div {
+    color: #FFF;
+    padding: 7px 27px;
+    font-size: 14px;
+    background: #d26e4b;
+    opacity: 1;
+}
+
+ .buz-reviews-public .owl-theme .owl-controls div.owl-buttons div:hover {
+    color: #FFF;
+    padding: 7px 27px;
+    font-size: 14px;
+    background: #d26e4b;
+    opacity: 0.8;
+}
+
  
  .testimonial{
     border-right: 4px solid #2A3D7D;

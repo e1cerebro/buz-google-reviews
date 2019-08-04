@@ -13,9 +13,9 @@
  * @package           Buz_Google_Reviews
  *
  * @wordpress-plugin
- * Plugin Name:       My Buz Google Reviews
+ * Plugin Name:       WP Google Business Reviews
  * Plugin URI:        #
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       This plugin shows your business reviews on your website using shortcodes
  * Version:           1.0.0
  * Author:            Uchenna Nwachukwu
  * Author URI:        #
@@ -83,9 +83,18 @@ function run_buz_google_reviews() {
 run_buz_google_reviews();
 
 if(!is_admin()){
-	require_once plugin_dir_path( __FILE__ ) . 'public/shortcodes/code.php';
+	require_once plugin_dir_path( __FILE__ ) . 'public/shortcodes/buz_shortcode.php';
 }
 
 define( 'LOADING_IMAGE_PATH', plugin_dir_url( __FILE__ ).'includes/images/loading.gif'  );
 define( 'GOOGLE_IMAGE_PATH', plugin_dir_url( __FILE__ ).'includes/images/powered_by_google_on_white.png'  );
  
+
+add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), 'buz_add_plugin_page_settings_link' );
+
+function buz_add_plugin_page_settings_link($links){
+	$links[] = '<a href="' .
+		admin_url( 'admin.php?page=buz-google-reviews' ) .
+		'">' . __('Settings') . '</a>';
+	return $links;
+}

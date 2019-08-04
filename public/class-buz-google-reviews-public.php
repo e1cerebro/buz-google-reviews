@@ -109,7 +109,13 @@ class Buz_Google_Reviews_Public {
 		wp_localize_script($this->plugin_name, 
 		'buz_vars',
 			[
-				'ajax_url' => admin_url('admin-ajax.php')
+				'ajax_url' 				     => admin_url('admin-ajax.php'),
+				'reviews_per_row' 		     => get_option('buz_reviews_per_row_el'),
+				'buz_show_pagination_el' 	 => get_option('buz_show_pagination_el'),
+				'buz_show_navigation_el' 	 => get_option('buz_show_navigation_el'),
+				'buz_next_nav_text_el' 	 	 => get_option('buz_next_nav_text_el'),
+				'buz_prev_nav_text_el' 	 	 => get_option('buz_prev_nav_text_el'),
+				'buz_slider_speed_el' 	 	 => get_option('buz_slider_speed_el')
 			]
 		);
  
